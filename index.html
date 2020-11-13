@@ -1,0 +1,1722 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Professor Layton - 4 Digits</title>
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/ntnuerc.css">
+
+        <!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+        <script src="https://daybrush.com/scenejs/release/latest/dist/scene.min.js"></script>
+		
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+        <script src="js/ntnu.js"></script>
+    </head>
+    <body>
+        <div class="reveal">
+        <div class="slides">
+            
+<section id="start" data-state="start">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Professor Layton - 4 Digits</h1>
+
+<p>
+      Jacky Baltes<br>
+      National Taiwan Normal University<br>
+      Taipei, Taiwan<br>
+      <a href="mailto:jacky.baltes@ntnu.edu.tw">jacky.baltes@ntnu.edu.tw</a><br>
+</p>
+
+<class 'datetime.date'>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-517a9112-273b-4e81-ae6b-9cf800a67708" ><span id="id-517a9112-273b-4e81-ae6b-9cf800a67708"><img id="img-id-517a9112-273b-4e81-ae6b-9cf800a67708"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-546819be-fdb3-4024-ab7a-bff6daebef5a" ><span id="id-546819be-fdb3-4024-ab7a-bff6daebef5a"><img id="img-id-546819be-fdb3-4024-ab7a-bff6daebef5a" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00003_frag_00001" data-state="slide_00003_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Professor Layton 4 - Digit Puzzle</h1>
+
+<div class="jb-text">
+<ul>
+<li>In this notebook, we will apply our search algorithm to find a solution
+for the <a href="https://layton.fandom.com/wiki/Puzzle:Four_Digits">4 Digit puzzle</a> 
+from the game <a href="https://layton.fandom.com/wiki/Professor_Layton_and_the_Curious_Village/List_of_puzzles">
+Prof. Layton and Curious Village</a></li>
+<li>
+<blockquote>
+<pre>
+A, B, C and D are single-digit numbers. The 
+following equations can all be made with 
+these numbers.
+
+A + C = D
+A x B = C
+C - B = B
+A x 4 = D
+
+Find the values of each digit and input 
+your answer as a four digit-number, ABCD.
+</pre>
+</blockquote>
+</ul>
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-5e28c096-4cd8-4bc5-ac46-3b14ea897b3c" ><span id="id-5e28c096-4cd8-4bc5-ac46-3b14ea897b3c"><img id="img-id-5e28c096-4cd8-4bc5-ac46-3b14ea897b3c"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-578528b9-ebff-46a8-8d9a-5c4cbef5f11c" ><span id="id-578528b9-ebff-46a8-8d9a-5c4cbef5f11c"><img id="img-id-578528b9-ebff-46a8-8d9a-5c4cbef5f11c" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00004_frag_00001" data-state="slide_00004_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+<div class="jb-input jb-render jb-code" style="text-align:center">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-input-code jb-render">
+<div style="font-size:0.5em"><!-- start of style="font-size:0.5em" -->
+<div class="highlight" style="background: #f8f8f8; color:#101010;display=inline-block;"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">graphviz</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">gv</span>
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">os</span>
+
+<span style="color: #008000">dir</span> <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;/content/images/&#39;</span>
+os<span style="color: #666666">.</span>system( <span style="color: #BA2121">f&quot;mkdir -p </span><span style="color: #BB6688; font-weight: bold">{</span><span style="color: #008000">dir</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+
+NO_SOLUTION, SOLUTION, POSSIBLE_SOLUTION <span style="color: #666666">=</span> <span style="color: #666666">0</span>,<span style="color: #666666">1</span>,<span style="color: #666666">2</span>
+
+<span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">is_valid</span>( equation ):
+  <span style="color: #408080; font-style: italic"># A is at position 0, B is at position 1, ...</span>
+
+  <span style="color: #008000; font-weight: bold">if</span> ( equation[<span style="color: #666666">0</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">2</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">3</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">0</span>] <span style="color: #666666">+</span> equation[<span style="color: #666666">2</span>] <span style="color: #666666">!=</span> equation[<span style="color: #666666">3</span>] ):
+    <span style="color: #008000; font-weight: bold">return</span> NO_SOLUTION
+ 
+  <span style="color: #008000; font-weight: bold">if</span> ( equation[<span style="color: #666666">0</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">1</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">2</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">0</span>] <span style="color: #666666">*</span> equation[<span style="color: #666666">1</span>] <span style="color: #666666">!=</span> equation[<span style="color: #666666">2</span>] ):
+    <span style="color: #008000; font-weight: bold">return</span> NO_SOLUTION
+
+  <span style="color: #008000; font-weight: bold">if</span> ( equation[<span style="color: #666666">2</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">1</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">2</span>] <span style="color: #666666">-</span> equation[<span style="color: #666666">1</span>] <span style="color: #666666">!=</span> equation[<span style="color: #666666">1</span>] ):
+    <span style="color: #008000; font-weight: bold">return</span> NO_SOLUTION
+
+  <span style="color: #008000; font-weight: bold">if</span> ( equation[<span style="color: #666666">0</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">3</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">0</span>] <span style="color: #666666">*</span> <span style="color: #666666">4</span> <span style="color: #666666">!=</span> equation[<span style="color: #666666">3</span>] ):
+    <span style="color: #008000; font-weight: bold">return</span> NO_SOLUTION
+ 
+  <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #AA22FF; font-weight: bold">in</span> equation:
+    <span style="color: #008000; font-weight: bold">return</span> POSSIBLE_SOLUTION
+  <span style="color: #008000; font-weight: bold">else</span>:
+    <span style="color: #008000; font-weight: bold">return</span> SOLUTION
+</pre></div>
+
+</div><!-- end of style="font-size:0.5em" -->
+</div><!-- end of jb-input-code jb-render -->
+
+</div>
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-049d6a40-c9a7-4574-8774-014bdb84775f" ><span id="id-049d6a40-c9a7-4574-8774-014bdb84775f"><img id="img-id-049d6a40-c9a7-4574-8774-014bdb84775f"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-bc3e713a-d487-46ed-9ef8-1fb02c0c5942" ><span id="id-bc3e713a-d487-46ed-9ef8-1fb02c0c5942"><img id="img-id-bc3e713a-d487-46ed-9ef8-1fb02c0c5942" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00005_frag_00001" data-state="slide_00005_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+<div class="jb-input jb-render jb-code" style="text-align:center">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-input-code jb-render">
+<div style="font-size:0.5em"><!-- start of style="font-size:0.5em" -->
+<div class="highlight" style="background: #f8f8f8; color:#101010;display=inline-block;"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">find_digits</span>( n_digits, dfs <span style="color: #666666">=</span> <span style="color: #008000; font-weight: bold">True</span> ):
+  initial <span style="color: #666666">=</span> [ <span style="color: #008000; font-weight: bold">None</span> ] <span style="color: #666666">*</span> n_digits
+  queue <span style="color: #666666">=</span> []
+  g <span style="color: #666666">=</span> gv<span style="color: #666666">.</span>Digraph( comment<span style="color: #666666">=</span><span style="color: #BA2121">&#39;4 Digits Puzzle&#39;</span> )
+  img <span style="color: #666666">=</span> <span style="color: #666666">0</span>
+
+  queue<span style="color: #666666">.</span>append( (initial,<span style="color: #666666">0</span>, [] ) )
+  num_nodes <span style="color: #666666">=</span> <span style="color: #008000">len</span>(queue)
+  sols <span style="color: #666666">=</span> []
+  <span style="color: #008000; font-weight: bold">while</span>( <span style="color: #008000">len</span>(queue) <span style="color: #666666">&gt;</span> <span style="color: #666666">0</span> ):
+    current, level, parent <span style="color: #666666">=</span> queue<span style="color: #666666">.</span>pop()
+    valid <span style="color: #666666">=</span> is_valid(current)
+    <span style="color: #008000; font-weight: bold">if</span> valid <span style="color: #666666">==</span> SOLUTION:
+      sols<span style="color: #666666">.</span>append( current)
+      g<span style="color: #666666">.</span>node( <span style="color: #008000">str</span>(current), shape<span style="color: #666666">=</span><span style="color: #BA2121">&#39;box&#39;</span>)
+      <span style="color: #008000; font-weight: bold">if</span> parent <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #AA22FF; font-weight: bold">and</span> <span style="color: #008000">len</span>(parent) <span style="color: #666666">&gt;</span> <span style="color: #666666">0</span>:
+        g<span style="color: #666666">.</span>edge( <span style="color: #008000">str</span>(parent[<span style="color: #666666">-1</span>]), <span style="color: #008000">str</span>(current) )
+        g<span style="color: #666666">.</span>render( <span style="color: #BA2121">f&quot;</span><span style="color: #BB6688; font-weight: bold">{</span><span style="color: #008000">dir</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">/g1_</span><span style="color: #BB6688; font-weight: bold">{</span>img<span style="color: #BB6688; font-weight: bold">:</span><span style="color: #BA2121">05d</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>,<span style="color: #008000">format</span><span style="color: #666666">=</span><span style="color: #BA2121">&#39;png&#39;</span> )
+        img <span style="color: #666666">=</span> img <span style="color: #666666">+</span> <span style="color: #666666">1</span>
+      <span style="color: #008000; font-weight: bold">break</span>
+    <span style="color: #008000; font-weight: bold">elif</span> valid <span style="color: #666666">==</span> POSSIBLE_SOLUTION: 
+      g<span style="color: #666666">.</span>node( <span style="color: #008000">str</span>(current) )   
+      <span style="color: #008000; font-weight: bold">if</span> parent <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #AA22FF; font-weight: bold">and</span> <span style="color: #008000">len</span>(parent) <span style="color: #666666">&gt;</span> <span style="color: #666666">0</span>:
+        g<span style="color: #666666">.</span>edge( <span style="color: #008000">str</span>(parent[<span style="color: #666666">-1</span>]), <span style="color: #008000">str</span>(current) )
+        g<span style="color: #666666">.</span>render( <span style="color: #BA2121">f&quot;</span><span style="color: #BB6688; font-weight: bold">{</span><span style="color: #008000">dir</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">/g1_</span><span style="color: #BB6688; font-weight: bold">{</span>img<span style="color: #BB6688; font-weight: bold">:</span><span style="color: #BA2121">05d</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>,<span style="color: #008000">format</span><span style="color: #666666">=</span><span style="color: #BA2121">&#39;png&#39;</span> )
+        img <span style="color: #666666">=</span> img <span style="color: #666666">+</span> <span style="color: #666666">1</span>
+      <span style="color: #408080; font-style: italic">#print(&quot;   &quot; * level, current)</span>
+      <span style="color: #008000; font-weight: bold">for</span> bi <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">range</span>(<span style="color: #008000">len</span>(current)): <span style="color: #408080; font-style: italic">#-1,-1,-1):</span>
+        <span style="color: #008000; font-weight: bold">if</span> current[bi] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span>:
+          <span style="color: #008000; font-weight: bold">for</span> nb <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">range</span>(<span style="color: #666666">9</span>, <span style="color: #666666">-1</span>,<span style="color: #666666">-1</span>):
+            <span style="color: #008000; font-weight: bold">if</span> nb <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #AA22FF; font-weight: bold">in</span> current:
+              <span style="color: #008000">next</span> <span style="color: #666666">=</span> current<span style="color: #666666">.</span>copy()
+              <span style="color: #008000">next</span>[bi] <span style="color: #666666">=</span> nb
+              <span style="color: #008000; font-weight: bold">if</span> dfs:
+                queue<span style="color: #666666">.</span>append( (<span style="color: #008000">next</span>, level<span style="color: #666666">+1</span>, parent<span style="color: #666666">.</span>copy() <span style="color: #666666">+</span> [ current ] ) ) 
+              <span style="color: #008000; font-weight: bold">else</span>:
+                queue<span style="color: #666666">.</span>insert(<span style="color: #666666">0</span>, (<span style="color: #008000">next</span>, level<span style="color: #666666">+1</span>, parent<span style="color: #666666">.</span>copy() <span style="color: #666666">+</span> [ current ] ) )             
+              num_nodes <span style="color: #666666">=</span> num_nodes <span style="color: #666666">+</span> <span style="color: #666666">1</span>
+          <span style="color: #008000; font-weight: bold">break</span>
+  <span style="color: #008000; font-weight: bold">return</span> num_nodes, sols, g
+
+n_digits <span style="color: #666666">=</span> <span style="color: #666666">4</span>
+
+num_nodes, sols , g<span style="color: #666666">=</span> find_digits( n_digits, dfs<span style="color: #666666">=</span><span style="color: #008000; font-weight: bold">True</span> )
+<span style="color: #008000">print</span>( <span style="color: #BA2121">f&#39;Depth First Search: solutions for </span><span style="color: #BB6688; font-weight: bold">{</span>n_digits<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121"> number of nodes </span><span style="color: #BB6688; font-weight: bold">{</span>num_nodes<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #BB6688; font-weight: bold">{</span>sols<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&#39;</span> )
+
+num_nodes, sols , g<span style="color: #666666">=</span> find_digits( n_digits, dfs<span style="color: #666666">=</span><span style="color: #008000; font-weight: bold">False</span> )
+<span style="color: #008000">print</span>( <span style="color: #BA2121">f&#39;Breadth First Search: solutions for </span><span style="color: #BB6688; font-weight: bold">{</span>n_digits<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121"> number of nodes </span><span style="color: #BB6688; font-weight: bold">{</span>num_nodes<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #BB6688; font-weight: bold">{</span>sols<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&#39;</span> )
+
+dfs2 <span style="color: #666666">=</span> addJBGraph( <span style="color: #BA2121">&quot;dfs2&quot;</span>, <span style="color: #666666">0</span>, <span style="color: #666666">0</span>, g )
+</pre></div>
+
+</div><!-- end of style="font-size:0.5em" -->
+</div><!-- end of jb-input-code jb-render -->
+
+</div>
+<div class="jb-print jb-render">
+<div style="font-size:0.5em"><!-- start of style="font-size:0.5em" -->
+<div class="jb-output jb-render code" style="text-align:center">
+<div class="jb-stdout code" style="display:inline-block; width:90%">
+<pre style="font-size:0.5em">
+Depth First Search: solutions for 4 number of nodes 213, [[2, 3, 6, 8]]
+Breadth First Search: solutions for 4 number of nodes 835, [[2, 3, 6, 8]]
+</pre>
+</div>
+</div>
+
+</div><!-- end of style="font-size:0.5em" -->
+</div><!-- end of jb-print jb-render -->
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-5265db56-0d8d-456f-8f09-b6fcdc849455" ><span id="id-5265db56-0d8d-456f-8f09-b6fcdc849455"><img id="img-id-5265db56-0d8d-456f-8f09-b6fcdc849455"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-f1876f92-c247-4088-a89b-87406b355a4f" ><span id="id-f1876f92-c247-4088-a89b-87406b355a4f"><img id="img-id-f1876f92-c247-4088-a89b-87406b355a4f" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00006_frag_00001" data-state="slide_00006_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Local Search</h1>
+
+<div class="jb-text">
+<ul>
+<li>Depth first search and breadth first search are the two global search methods</li>
+<ul>
+<li>They search the entire search space in a systematic way and can find the globally best solution</li>
+<li>This can be very slow for large search spaces</li>
+</ul>
+</ul>
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-27d15eef-1b47-4330-9466-fbb05379cae6" ><span id="id-27d15eef-1b47-4330-9466-fbb05379cae6"><img id="img-id-27d15eef-1b47-4330-9466-fbb05379cae6"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-ad719601-fa20-4793-8e07-583fa7d42194" ><span id="id-ad719601-fa20-4793-8e07-583fa7d42194"><img id="img-id-ad719601-fa20-4793-8e07-583fa7d42194" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00007_frag_00001" data-state="slide_00007_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Local Search</h1>
+
+
+<span id="id-e96172a1-088f-4f36-809d-a8a78e71995c" ><span id="id-e96172a1-088f-4f36-809d-a8a78e71995c"><img id="img-id-e96172a1-088f-4f36-809d-a8a78e71995c"     src="assets/images/hc1.svg"/></span>
+</span>
+
+
+<div class="jb-text">
+<ul>
+<li>Hill Climbing: From the current state, we look at all possible moves and we pick
+the best move</li>
+<ul>
+<li>Does not search the entire space any more (no global search)</li>
+<li>Does find the best solution in the local neighborhood (local search)</li>
+</ul>
+</ul>
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-9c336434-2f20-4601-a568-ac8c94716162" ><span id="id-9c336434-2f20-4601-a568-ac8c94716162"><img id="img-id-9c336434-2f20-4601-a568-ac8c94716162"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-0069e6de-d701-4bfc-93cb-37f735dec20d" ><span id="id-0069e6de-d701-4bfc-93cb-37f735dec20d"><img id="img-id-0069e6de-d701-4bfc-93cb-37f735dec20d" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00008_frag_00001" data-state="slide_00008_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>4 Digits and Hill Climbing</h1>
+
+<div class="jb-text">
+<ul>
+<li>Assume that we have some numbers A=1, B=5, C=3, D=3 and I try them as a solution</li>
+<li>Then most likely, they will not work. We can test that</li>
+<ul>
+<li>A+C=D => 1 + 3 = 3 Wrong!, Difference is +1</li>
+<li>A*B=C => 1 * 5 = 3 Wrong!, Difference is +2</li>
+<li>C-B=B => 3 - 5 = 5 Wrong!, Difference is -7</li>
+<li>A*4=D => 1 * 4 = 3 Wrong!, Difference is +1</li>
+</ul>
+<li>Can define error: 1 + 2 -7 + 1 = -3 - In this case, the error may be 0, but not all equations correct.</li>
+<li>We must use either the absolute of the error abs(1) + abs(2) + abs(7) + abs(1) = 11</li>
+<li>Most commonly we would use the least sqaured error (LSE) as a error function: 1**2+2**2+7**2+1**2 = 55</li>  
+</ul>
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-2bcba390-e6f4-4f61-940b-5d6ae8b3c5cd" ><span id="id-2bcba390-e6f4-4f61-940b-5d6ae8b3c5cd"><img id="img-id-2bcba390-e6f4-4f61-940b-5d6ae8b3c5cd"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-da4dbaf0-b7d5-4abc-a470-4565f1a70551" ><span id="id-da4dbaf0-b7d5-4abc-a470-4565f1a70551"><img id="img-id-da4dbaf0-b7d5-4abc-a470-4565f1a70551" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00009_frag_00001" data-state="slide_00009_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+<div class="jb-input jb-render jb-code" style="text-align:center">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-input-code jb-render">
+<div style="font-size:0.5em"><!-- start of style="font-size:0.5em" -->
+<div class="highlight" style="background: #f8f8f8; color:#101010;display=inline-block;"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">graphviz</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">gv</span>
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">os</span>
+
+<span style="color: #008000">dir</span> <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;/content/images/&#39;</span>
+os<span style="color: #666666">.</span>system( <span style="color: #BA2121">f&quot;mkdir -p </span><span style="color: #BB6688; font-weight: bold">{</span><span style="color: #008000">dir</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+
+<span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">d4_error_lse</span>( equation ):
+  <span style="color: #408080; font-style: italic"># A is at position 0, B is at position 1, ...</span>
+  cum_err <span style="color: #666666">=</span> <span style="color: #666666">0</span>
+
+  <span style="color: #008000; font-weight: bold">if</span> ( equation[<span style="color: #666666">0</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">2</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">3</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ):
+    e1 <span style="color: #666666">=</span> (equation[<span style="color: #666666">0</span>] <span style="color: #666666">+</span> equation[<span style="color: #666666">2</span>] <span style="color: #666666">-</span> equation[<span style="color: #666666">3</span>])
+    <span style="color: #408080; font-style: italic">#print(&#39;e1&#39;,e1,e1**2)</span>
+    cum_err <span style="color: #666666">=</span> cum_err <span style="color: #666666">+</span> e1<span style="color: #666666">**2</span>
+    
+  <span style="color: #008000; font-weight: bold">if</span> ( equation[<span style="color: #666666">0</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">1</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">2</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ):
+    e2 <span style="color: #666666">=</span> ( equation[<span style="color: #666666">0</span>] <span style="color: #666666">*</span> equation[<span style="color: #666666">1</span>] <span style="color: #666666">-</span> equation[<span style="color: #666666">2</span>] )
+    <span style="color: #408080; font-style: italic">#print(&#39;e2&#39;,e2,e2**2)</span>
+    cum_err <span style="color: #666666">=</span> cum_err <span style="color: #666666">+</span> e2<span style="color: #666666">**2</span>
+
+  <span style="color: #008000; font-weight: bold">if</span> ( equation[<span style="color: #666666">2</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">1</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ):
+    e3 <span style="color: #666666">=</span> ( equation[<span style="color: #666666">2</span>] <span style="color: #666666">-</span> equation[<span style="color: #666666">1</span>] <span style="color: #666666">-</span> equation[<span style="color: #666666">1</span>] )
+    <span style="color: #408080; font-style: italic">#print(&#39;e3&#39;,e3,e3**2)</span>
+    cum_err <span style="color: #666666">=</span> cum_err <span style="color: #666666">+</span> e3<span style="color: #666666">**2</span>
+
+  <span style="color: #008000; font-weight: bold">if</span> ( equation[<span style="color: #666666">0</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( equation[<span style="color: #666666">3</span>] <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ):
+    e4 <span style="color: #666666">=</span> ( equation[<span style="color: #666666">0</span>] <span style="color: #666666">*</span> <span style="color: #666666">4</span> <span style="color: #666666">-</span> equation[<span style="color: #666666">3</span>] )
+    <span style="color: #408080; font-style: italic">#print(&#39;e4&#39;,e4,e4**2)</span>
+    cum_err <span style="color: #666666">=</span> cum_err <span style="color: #666666">+</span> e4<span style="color: #666666">**2</span>
+  <span style="color: #008000; font-weight: bold">return</span> cum_err
+
+e <span style="color: #666666">=</span> [<span style="color: #666666">1</span>,<span style="color: #666666">5</span>,<span style="color: #666666">3</span>,<span style="color: #666666">3</span>]
+<span style="color: #008000">print</span>( <span style="color: #BA2121">f&#39;Error for d4_error_lse(</span><span style="color: #BB6688; font-weight: bold">{</span>e<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">)=</span><span style="color: #BB6688; font-weight: bold">{</span>d4_error_lse(e)<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&#39;</span> )
+</pre></div>
+
+</div><!-- end of style="font-size:0.5em" -->
+</div><!-- end of jb-input-code jb-render -->
+
+</div>
+<div class="jb-print jb-render">
+<div style="font-size:0.5em"><!-- start of style="font-size:0.5em" -->
+<div class="jb-output jb-render code" style="text-align:center">
+<div class="jb-stdout code" style="display:inline-block; width:90%">
+<pre style="font-size:0.5em">
+Error for d4_error_lse([1, 5, 3, 3])=55
+</pre>
+</div>
+</div>
+
+</div><!-- end of style="font-size:0.5em" -->
+</div><!-- end of jb-print jb-render -->
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-7b2bf3c6-ab66-4e13-ad40-1ab6c5b2e6e0" ><span id="id-7b2bf3c6-ab66-4e13-ad40-1ab6c5b2e6e0"><img id="img-id-7b2bf3c6-ab66-4e13-ad40-1ab6c5b2e6e0"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-ed59dc26-3927-4aa9-8914-37b4d69d0bc2" ><span id="id-ed59dc26-3927-4aa9-8914-37b4d69d0bc2"><img id="img-id-ed59dc26-3927-4aa9-8914-37b4d69d0bc2" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00010_frag_00001" data-state="slide_00010_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+<div class="jb-input jb-render jb-code" style="text-align:center">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-input-code jb-render">
+<div style="font-size:0.5em"><!-- start of style="font-size:0.5em" -->
+<div class="highlight" style="background: #f8f8f8; color:#101010;display=inline-block;"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">find_digits_hc</span>( n_digits, initial <span style="color: #666666">=</span> <span style="color: #008000; font-weight: bold">None</span> ):
+  <span style="color: #008000; font-weight: bold">if</span> initial <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span>:
+    initial <span style="color: #666666">=</span> [ <span style="color: #666666">5</span> ] <span style="color: #666666">*</span> n_digits
+  queue <span style="color: #666666">=</span> []
+  g <span style="color: #666666">=</span> gv<span style="color: #666666">.</span>Digraph( comment<span style="color: #666666">=</span><span style="color: #BA2121">&#39;4 Digits Puzzle - Hill Climbing&#39;</span> )
+  img <span style="color: #666666">=</span> <span style="color: #666666">0</span>
+
+  current_node <span style="color: #666666">=</span> ( initial,<span style="color: #666666">0</span>, [] )
+  sols <span style="color: #666666">=</span> []
+  num_nodes <span style="color: #666666">=</span> <span style="color: #666666">1</span>
+
+  <span style="color: #008000; font-weight: bold">while</span>( current_node <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> ):
+    current, level, parent <span style="color: #666666">=</span> current_node
+    err <span style="color: #666666">=</span> d4_error_lse( current )
+    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;  &quot;</span> <span style="color: #666666">*</span> level, <span style="color: #BA2121">&#39;Current&#39;</span>, current, <span style="color: #BA2121">&#39;Error&#39;</span>, err )
+    <span style="color: #008000; font-weight: bold">if</span> err <span style="color: #666666">==</span> <span style="color: #666666">0.0</span>:
+      sols<span style="color: #666666">.</span>append( current )
+      g<span style="color: #666666">.</span>node( <span style="color: #008000">str</span>(current), shape<span style="color: #666666">=</span><span style="color: #BA2121">&#39;box&#39;</span> )
+      <span style="color: #008000; font-weight: bold">if</span> parent <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #AA22FF; font-weight: bold">and</span> <span style="color: #008000">len</span>(parent) <span style="color: #666666">&gt;</span> <span style="color: #666666">0</span>:
+        g<span style="color: #666666">.</span>edge( <span style="color: #008000">str</span>(parent[<span style="color: #666666">-1</span>]), <span style="color: #008000">str</span>(current) )
+        g<span style="color: #666666">.</span>render( <span style="color: #BA2121">f&quot;</span><span style="color: #BB6688; font-weight: bold">{</span><span style="color: #008000">dir</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">/ghc_</span><span style="color: #BB6688; font-weight: bold">{</span>img<span style="color: #BB6688; font-weight: bold">:</span><span style="color: #BA2121">05d</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>,<span style="color: #008000">format</span><span style="color: #666666">=</span><span style="color: #BA2121">&#39;png&#39;</span> )
+        img <span style="color: #666666">=</span> img <span style="color: #666666">+</span> <span style="color: #666666">1</span>
+      <span style="color: #008000; font-weight: bold">break</span>
+    <span style="color: #008000; font-weight: bold">else</span>:
+      g<span style="color: #666666">.</span>node( <span style="color: #008000">str</span>(current) )   
+      <span style="color: #008000; font-weight: bold">if</span> parent <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #AA22FF; font-weight: bold">and</span> <span style="color: #008000">len</span>(parent) <span style="color: #666666">&gt;</span> <span style="color: #666666">0</span>:
+        g<span style="color: #666666">.</span>edge( <span style="color: #008000">str</span>(parent[<span style="color: #666666">-1</span>]), <span style="color: #008000">str</span>(current) )
+        g<span style="color: #666666">.</span>render( <span style="color: #BA2121">f&quot;</span><span style="color: #BB6688; font-weight: bold">{</span><span style="color: #008000">dir</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">/ghc_</span><span style="color: #BB6688; font-weight: bold">{</span>img<span style="color: #BB6688; font-weight: bold">:</span><span style="color: #BA2121">05d</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>,<span style="color: #008000">format</span><span style="color: #666666">=</span><span style="color: #BA2121">&#39;png&#39;</span> )
+        img <span style="color: #666666">=</span> img <span style="color: #666666">+</span> <span style="color: #666666">1</span>
+
+      current_node <span style="color: #666666">=</span> <span style="color: #008000; font-weight: bold">None</span>
+      min_error <span style="color: #666666">=</span> err
+      <span style="color: #008000; font-weight: bold">for</span> pos <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">range</span>(<span style="color: #008000">len</span>(current)):
+        digit <span style="color: #666666">=</span> current[pos]
+        <span style="color: #008000; font-weight: bold">for</span> try_d <span style="color: #AA22FF; font-weight: bold">in</span> [ digit <span style="color: #666666">+</span> <span style="color: #666666">1</span>, digit <span style="color: #666666">-</span> <span style="color: #666666">1</span> ]:
+          <span style="color: #008000; font-weight: bold">if</span> (try_d <span style="color: #666666">&gt;=</span> <span style="color: #666666">1</span>) <span style="color: #AA22FF; font-weight: bold">and</span> (try_d <span style="color: #666666">&lt;=</span> <span style="color: #666666">9</span>):
+            cand <span style="color: #666666">=</span> current<span style="color: #666666">.</span>copy()
+            cand[pos] <span style="color: #666666">=</span> try_d
+            try_err <span style="color: #666666">=</span> d4_error_lse( cand )
+            <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;  &quot;</span> <span style="color: #666666">*</span> level, <span style="color: #BA2121">&#39;Trying&#39;</span>, cand, <span style="color: #BA2121">&#39;Error&#39;</span>, try_err )
+    
+            <span style="color: #008000; font-weight: bold">if</span> try_err <span style="color: #666666">&lt;</span> min_error:
+              current_node <span style="color: #666666">=</span> ( cand<span style="color: #666666">.</span>copy(), level <span style="color: #666666">+</span> <span style="color: #666666">1</span>, parent<span style="color: #666666">.</span>copy() <span style="color: #666666">+</span> [current] )
+              num_nodes <span style="color: #666666">=</span> num_nodes <span style="color: #666666">+</span> <span style="color: #666666">1</span>
+              min_error <span style="color: #666666">=</span> try_err
+  <span style="color: #008000; font-weight: bold">return</span> num_nodes, sols, g
+</pre></div>
+
+</div><!-- end of style="font-size:0.5em" -->
+</div><!-- end of jb-input-code jb-render -->
+
+</div>
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-032026a1-d1b3-4a75-b672-97d1cb3bf17b" ><span id="id-032026a1-d1b3-4a75-b672-97d1cb3bf17b"><img id="img-id-032026a1-d1b3-4a75-b672-97d1cb3bf17b"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-390b0f8a-cfa2-41e2-9e65-15b02cd8c6f0" ><span id="id-390b0f8a-cfa2-41e2-9e65-15b02cd8c6f0"><img id="img-id-390b0f8a-cfa2-41e2-9e65-15b02cd8c6f0" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00011_frag_00001" data-state="slide_00011_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+<div class="jb-input jb-render jb-code" style="text-align:center">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-input-code jb-render">
+<div style="font-size:0.5em"><!-- start of style="font-size:0.5em" -->
+<div class="highlight" style="background: #f8f8f8; color:#101010;display=inline-block;"><pre style="line-height: 125%"><span></span>n_digits <span style="color: #666666">=</span> <span style="color: #666666">4</span>
+
+num_nodes, sols , g<span style="color: #666666">=</span> find_digits_hc( n_digits )
+<span style="color: #008000">print</span>( <span style="color: #BA2121">f&#39;Hill Climbing Search: solutions for </span><span style="color: #BB6688; font-weight: bold">{</span>n_digits<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121"> number of nodes </span><span style="color: #BB6688; font-weight: bold">{</span>num_nodes<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #BB6688; font-weight: bold">{</span>sols<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&#39;</span> )
+</pre></div>
+
+</div><!-- end of style="font-size:0.5em" -->
+</div><!-- end of jb-input-code jb-render -->
+
+</div>
+<div class="jb-print jb-render">
+<div style="font-size:0.5em"><!-- start of style="font-size:0.5em" -->
+<div class="jb-output jb-render code" style="text-align:center">
+<div class="jb-stdout code" style="display:inline-block; width:90%">
+<pre style="font-size:0.5em">
+ Current [5, 5, 5, 5] Error 675
+ Trying [6, 5, 5, 5] Error 1047
+ Trying [4, 5, 5, 5] Error 387
+ Trying [5, 6, 5, 5] Error 924
+ Trying [5, 4, 5, 5] Error 484
+ Trying [5, 5, 6, 5] Error 638
+ Trying [5, 5, 4, 5] Error 718
+ Trying [5, 5, 5, 6] Error 637
+ Trying [5, 5, 5, 4] Error 717
+   Current [4, 5, 5, 5] Error 387
+   Trying [5, 5, 5, 5] Error 675
+   Trying [3, 5, 5, 5] Error 183
+   Trying [4, 6, 5, 5] Error 547
+   Trying [4, 4, 5, 5] Error 267
+   Trying [4, 5, 6, 5] Error 358
+   Trying [4, 5, 4, 5] Error 422
+   Trying [4, 5, 5, 6] Error 359
+   Trying [4, 5, 5, 4] Error 419
+     Current [3, 5, 5, 5] Error 183
+     Trying [4, 5, 5, 5] Error 387
+     Trying [2, 5, 5, 5] Error 63
+     Trying [3, 6, 5, 5] Error 276
+     Trying [3, 4, 5, 5] Error 116
+     Trying [3, 5, 6, 5] Error 162
+     Trying [3, 5, 4, 5] Error 210
+     Trying [3, 5, 5, 6] Error 165
+     Trying [3, 5, 5, 4] Error 205
+       Current [2, 5, 5, 5] Error 63
+       Trying [3, 5, 5, 5] Error 183
+       Trying [1, 5, 5, 5] Error 27
+       Trying [2, 6, 5, 5] Error 111
+       Trying [2, 4, 5, 5] Error 31
+       Trying [2, 5, 6, 5] Error 50
+       Trying [2, 5, 4, 5] Error 82
+       Trying [2, 5, 5, 6] Error 55
+       Trying [2, 5, 5, 4] Error 75
+         Current [1, 5, 5, 5] Error 27
+         Trying [2, 5, 5, 5] Error 63
+         Trying [1, 6, 5, 5] Error 52
+         Trying [1, 4, 5, 5] Error 12
+         Trying [1, 5, 6, 5] Error 22
+         Trying [1, 5, 4, 5] Error 38
+         Trying [1, 5, 5, 6] Error 29
+         Trying [1, 5, 5, 4] Error 29
+           Current [1, 4, 5, 5] Error 12
+           Trying [2, 4, 5, 5] Error 31
+           Trying [1, 5, 5, 5] Error 27
+           Trying [1, 3, 5, 5] Error 7
+           Trying [1, 4, 6, 5] Error 13
+           Trying [1, 4, 4, 5] Error 17
+           Trying [1, 4, 5, 6] Error 14
+           Trying [1, 4, 5, 4] Error 14
+             Current [1, 3, 5, 5] Error 7
+             Trying [2, 3, 5, 5] Error 15
+             Trying [1, 4, 5, 5] Error 12
+             Trying [1, 2, 5, 5] Error 12
+             Trying [1, 3, 6, 5] Error 14
+             Trying [1, 3, 4, 5] Error 6
+             Trying [1, 3, 5, 6] Error 9
+             Trying [1, 3, 5, 4] Error 9
+               Current [1, 3, 4, 5] Error 6
+               Trying [2, 3, 4, 5] Error 18
+               Trying [1, 4, 4, 5] Error 17
+               Trying [1, 2, 4, 5] Error 5
+               Trying [1, 3, 5, 5] Error 7
+               Trying [1, 3, 3, 5] Error 11
+               Trying [1, 3, 4, 6] Error 10
+               Trying [1, 3, 4, 4] Error 6
+                 Current [1, 2, 4, 5] Error 5
+                 Trying [2, 2, 4, 5] Error 10
+                 Trying [1, 3, 4, 5] Error 6
+                 Trying [1, 1, 4, 5] Error 14
+                 Trying [1, 2, 5, 5] Error 12
+                 Trying [1, 2, 3, 5] Error 4
+                 Trying [1, 2, 4, 6] Error 9
+                 Trying [1, 2, 4, 4] Error 5
+                   Current [1, 2, 3, 5] Error 4
+                   Trying [2, 2, 3, 5] Error 11
+                   Trying [1, 3, 3, 5] Error 11
+                   Trying [1, 1, 3, 5] Error 7
+                   Trying [1, 2, 4, 5] Error 5
+                   Trying [1, 2, 2, 5] Error 9
+                   Trying [1, 2, 3, 6] Error 10
+                   Trying [1, 2, 3, 4] Error 2
+                     Current [1, 2, 3, 4] Error 2
+                     Trying [2, 2, 3, 4] Error 19
+                     Trying [1, 3, 3, 4] Error 9
+                     Trying [1, 1, 3, 4] Error 5
+                     Trying [1, 2, 4, 4] Error 5
+                     Trying [1, 2, 2, 4] Error 5
+                     Trying [1, 2, 3, 5] Error 4
+                     Trying [1, 2, 3, 3] Error 4
+Hill Climbing Search: solutions for 4 number of nodes 11, []
+</pre>
+</div>
+</div>
+
+</div><!-- end of style="font-size:0.5em" -->
+</div><!-- end of jb-print jb-render -->
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-8201066a-1028-418f-9ee7-176373cf664d" ><span id="id-8201066a-1028-418f-9ee7-176373cf664d"><img id="img-id-8201066a-1028-418f-9ee7-176373cf664d"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-a2b711c8-cff8-4907-a41b-73c06c3fcd75" ><span id="id-a2b711c8-cff8-4907-a41b-73c06c3fcd75"><img id="img-id-a2b711c8-cff8-4907-a41b-73c06c3fcd75" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00012_frag_00001" data-state="slide_00012_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<span id="id-ae0f2069-5f94-42b0-bcac-e1182507033c" ><span id="id-ae0f2069-5f94-42b0-bcac-e1182507033c"><img id="img-id-ae0f2069-5f94-42b0-bcac-e1182507033c"     src="assets/images/hc20.svg"/></span>
+</span>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-cf0585d1-5472-4e65-a089-f49c6748f41f" ><span id="id-cf0585d1-5472-4e65-a089-f49c6748f41f"><img id="img-id-cf0585d1-5472-4e65-a089-f49c6748f41f"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-f09a8422-bdf6-49a6-b462-6f5e645706eb" ><span id="id-f09a8422-bdf6-49a6-b462-6f5e645706eb"><img id="img-id-f09a8422-bdf6-49a6-b462-6f5e645706eb" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00013_frag_00001" data-state="slide_00013_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Local Search and Failure</h1>
+
+<div class="jb-text">
+<ul>
+<li>Sometimes the local search will fail to find a solution that is good enough</li>
+<li>The path of search through the search space is defined by the initial position</li>
+<li>The (local) solution that we find is dependent on the start state</li>
+<li>Simplest, but surprisingly effective, solution is to start with a different random 
+initial position: <b>Random restart</b></li>
+</ul>
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-f4921ff0-3aef-474a-8991-474cd092e105" ><span id="id-f4921ff0-3aef-474a-8991-474cd092e105"><img id="img-id-f4921ff0-3aef-474a-8991-474cd092e105"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-a19ad4ce-f9c8-48fb-beab-b7bcb55d8122" ><span id="id-a19ad4ce-f9c8-48fb-beab-b7bcb55d8122"><img id="img-id-a19ad4ce-f9c8-48fb-beab-b7bcb55d8122" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00014_frag_00001" data-state="slide_00014_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+<div class="jb-input jb-render jb-code" style="text-align:center">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-input-code jb-render">
+<div style="font-size:0.5em"><!-- start of style="font-size:0.5em" -->
+<div class="highlight" style="background: #f8f8f8; color:#101010;display=inline-block;"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">random</span>
+
+n_digits <span style="color: #666666">=</span> <span style="color: #666666">4</span>
+
+sols <span style="color: #666666">=</span> []
+total_nodes <span style="color: #666666">=</span> <span style="color: #666666">0</span>
+<span style="color: #008000; font-weight: bold">while</span>( <span style="color: #008000">len</span>(sols) <span style="color: #666666">==</span> <span style="color: #666666">0</span> ):
+  initial <span style="color: #666666">=</span> [ random<span style="color: #666666">.</span>randint(<span style="color: #666666">1</span>,<span style="color: #666666">9</span>) <span style="color: #008000; font-weight: bold">for</span> d <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">range</span>(n_digits) ]
+  num_nodes, sols, g<span style="color: #666666">=</span> find_digits_hc( n_digits, initial )
+  total_nodes <span style="color: #666666">=</span> num_nodes <span style="color: #666666">+</span> total_nodes
+  <span style="color: #008000">print</span>( <span style="color: #BA2121">f&#39;Hill Climbing Search: solutions for </span><span style="color: #BB6688; font-weight: bold">{</span>n_digits<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121"> number of nodes </span><span style="color: #BB6688; font-weight: bold">{</span>total_nodes<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">, </span><span style="color: #BB6688; font-weight: bold">{</span>sols<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&#39;</span> )
+</pre></div>
+
+</div><!-- end of style="font-size:0.5em" -->
+</div><!-- end of jb-input-code jb-render -->
+
+</div>
+<div class="jb-print jb-render">
+<div style="font-size:0.5em"><!-- start of style="font-size:0.5em" -->
+<div class="jb-output jb-render code" style="text-align:center">
+<div class="jb-stdout code" style="display:inline-block; width:90%">
+<pre style="font-size:0.5em">
+ Current [1, 3, 3, 7] Error 27
+ Trying [2, 3, 3, 7] Error 23
+ Trying [1, 4, 3, 7] Error 44
+ Trying [1, 2, 3, 7] Error 20
+ Trying [1, 3, 4, 7] Error 18
+ Trying [1, 3, 2, 7] Error 42
+ Trying [1, 3, 3, 8] Error 41
+ Trying [1, 3, 3, 6] Error 17
+   Current [1, 3, 3, 6] Error 17
+   Trying [2, 3, 3, 6] Error 23
+   Trying [1, 4, 3, 6] Error 34
+   Trying [1, 2, 3, 6] Error 10
+   Trying [1, 3, 4, 6] Error 10
+   Trying [1, 3, 2, 6] Error 30
+   Trying [1, 3, 3, 7] Error 27
+   Trying [1, 3, 3, 5] Error 11
+     Current [1, 2, 3, 6] Error 10
+     Trying [2, 2, 3, 6] Error 7
+     Trying [1, 3, 3, 6] Error 17
+     Trying [1, 1, 3, 6] Error 13
+     Trying [1, 2, 4, 6] Error 9
+     Trying [1, 2, 2, 6] Error 17
+     Trying [1, 2, 3, 7] Error 20
+     Trying [1, 2, 3, 5] Error 4
+       Current [1, 2, 3, 5] Error 4
+       Trying [2, 2, 3, 5] Error 11
+       Trying [1, 3, 3, 5] Error 11
+       Trying [1, 1, 3, 5] Error 7
+       Trying [1, 2, 4, 5] Error 5
+       Trying [1, 2, 2, 5] Error 9
+       Trying [1, 2, 3, 6] Error 10
+       Trying [1, 2, 3, 4] Error 2
+         Current [1, 2, 3, 4] Error 2
+         Trying [2, 2, 3, 4] Error 19
+         Trying [1, 3, 3, 4] Error 9
+         Trying [1, 1, 3, 4] Error 5
+         Trying [1, 2, 4, 4] Error 5
+         Trying [1, 2, 2, 4] Error 5
+         Trying [1, 2, 3, 5] Error 4
+         Trying [1, 2, 3, 3] Error 4
+Hill Climbing Search: solutions for 4 number of nodes 9, []
+ Current [5, 2, 4, 1] Error 461
+ Trying [6, 2, 4, 1] Error 674
+ Trying [4, 2, 4, 1] Error 290
+ Trying [5, 3, 4, 1] Error 550
+ Trying [5, 1, 4, 1] Error 430
+ Trying [5, 2, 5, 1] Error 468
+ Trying [5, 2, 3, 1] Error 460
+ Trying [5, 2, 4, 2] Error 409
+   Current [4, 2, 4, 1] Error 290
+   Trying [5, 2, 4, 1] Error 461
+   Trying [3, 2, 4, 1] Error 161
+   Trying [4, 3, 4, 1] Error 342
+   Trying [4, 1, 4, 1] Error 278
+   Trying [4, 2, 5, 1] Error 299
+   Trying [4, 2, 3, 1] Error 287
+   Trying [4, 2, 4, 2] Error 248
+     Current [3, 2, 4, 1] Error 161
+     Trying [4, 2, 4, 1] Error 290
+     Trying [2, 2, 4, 1] Error 74
+     Trying [3, 3, 4, 1] Error 186
+     Trying [3, 1, 4, 1] Error 162
+     Trying [3, 2, 5, 1] Error 172
+     Trying [3, 2, 3, 1] Error 156
+     Trying [3, 2, 4, 2] Error 129
+       Current [2, 2, 4, 1] Error 74
+       Trying [3, 2, 4, 1] Error 161
+       Trying [1, 2, 4, 1] Error 29
+       Trying [2, 3, 4, 1] Error 82
+       Trying [2, 1, 4, 1] Error 82
+       Trying [2, 2, 5, 1] Error 87
+       Trying [2, 2, 3, 1] Error 67
+       Trying [2, 2, 4, 2] Error 52
+         Current [1, 2, 4, 1] Error 29
+         Trying [2, 2, 4, 1] Error 74
+         Trying [1, 3, 4, 1] Error 30
+         Trying [1, 1, 4, 1] Error 38
+         Trying [1, 2, 5, 1] Error 44
+         Trying [1, 2, 3, 1] Error 20
+         Trying [1, 2, 4, 2] Error 17
+           Current [1, 2, 4, 2] Error 17
+           Trying [2, 2, 4, 2] Error 52
+           Trying [1, 3, 4, 2] Error 18
+           Trying [1, 1, 4, 2] Error 26
+           Trying [1, 2, 5, 2] Error 30
+           Trying [1, 2, 3, 2] Error 10
+           Trying [1, 2, 4, 3] Error 9
+           Trying [1, 2, 4, 1] Error 29
+             Current [1, 2, 4, 3] Error 9
+             Trying [2, 2, 4, 3] Error 34
+             Trying [1, 3, 4, 3] Error 10
+             Trying [1, 1, 4, 3] Error 18
+             Trying [1, 2, 5, 3] Error 20
+             Trying [1, 2, 3, 3] Error 4
+             Trying [1, 2, 4, 4] Error 5
+             Trying [1, 2, 4, 2] Error 17
+               Current [1, 2, 3, 3] Error 4
+               Trying [2, 2, 3, 3] Error 31
+               Trying [1, 3, 3, 3] Error 11
+               Trying [1, 1, 3, 3] Error 7
+               Trying [1, 2, 4, 3] Error 9
+               Trying [1, 2, 2, 3] Error 5
+               Trying [1, 2, 3, 4] Error 2
+               Trying [1, 2, 3, 2] Error 10
+                 Current [1, 2, 3, 4] Error 2
+                 Trying [2, 2, 3, 4] Error 19
+                 Trying [1, 3, 3, 4] Error 9
+                 Trying [1, 1, 3, 4] Error 5
+                 Trying [1, 2, 4, 4] Error 5
+                 Trying [1, 2, 2, 4] Error 5
+                 Trying [1, 2, 3, 5] Error 4
+                 Trying [1, 2, 3, 3] Error 4
+Hill Climbing Search: solutions for 4 number of nodes 20, []
+ Current [6, 2, 6, 1] Error 690
+ Trying [7, 2, 6, 1] Error 941
+ Trying [5, 2, 6, 1] Error 481
+ Trying [6, 3, 6, 1] Error 794
+ Trying [6, 1, 6, 1] Error 666
+ Trying [6, 2, 7, 1] Error 707
+ Trying [6, 2, 5, 1] Error 679
+ Trying [6, 2, 6, 2] Error 624
+   Current [5, 2, 6, 1] Error 481
+   Trying [6, 2, 6, 1] Error 690
+   Trying [4, 2, 6, 1] Error 314
+   Trying [5, 3, 6, 1] Error 542
+   Trying [5, 1, 6, 1] Error 478
+   Trying [5, 2, 7, 1] Error 500
+   Trying [5, 2, 5, 1] Error 468
+   Trying [5, 2, 6, 2] Error 425
+     Current [4, 2, 6, 1] Error 314
+     Trying [5, 2, 6, 1] Error 481
+     Trying [3, 2, 6, 1] Error 189
+     Trying [4, 3, 6, 1] Error 342
+     Trying [4, 1, 6, 1] Error 326
+     Trying [4, 2, 7, 1] Error 335
+     Trying [4, 2, 5, 1] Error 299
+     Trying [4, 2, 6, 2] Error 268
+       Current [3, 2, 6, 1] Error 189
+       Trying [4, 2, 6, 1] Error 314
+       Trying [2, 2, 6, 1] Error 106
+       Trying [3, 3, 6, 1] Error 194
+       Trying [3, 1, 6, 1] Error 210
+       Trying [3, 2, 7, 1] Error 212
+       Trying [3, 2, 5, 1] Error 172
+       Trying [3, 2, 6, 2] Error 153
+         Current [2, 2, 6, 1] Error 106
+         Trying [3, 2, 6, 1] Error 189
+         Trying [1, 2, 6, 1] Error 65
+         Trying [2, 3, 6, 1] Error 98
+         Trying [2, 1, 6, 1] Error 130
+         Trying [2, 2, 7, 1] Error 131
+         Trying [2, 2, 5, 1] Error 87
+         Trying [2, 2, 6, 2] Error 80
+           Current [1, 2, 6, 1] Error 65
+           Trying [2, 2, 6, 1] Error 106
+           Trying [1, 3, 6, 1] Error 54
+           Trying [1, 1, 6, 1] Error 86
+           Trying [1, 2, 7, 1] Error 92
+           Trying [1, 2, 5, 1] Error 44
+           Trying [1, 2, 6, 2] Error 49
+             Current [1, 2, 5, 1] Error 44
+             Trying [2, 2, 5, 1] Error 87
+             Trying [1, 3, 5, 1] Error 39
+             Trying [1, 1, 5, 1] Error 59
+             Trying [1, 2, 6, 1] Error 65
+             Trying [1, 2, 4, 1] Error 29
+             Trying [1, 2, 5, 2] Error 30
+               Current [1, 2, 4, 1] Error 29
+               Trying [2, 2, 4, 1] Error 74
+               Trying [1, 3, 4, 1] Error 30
+               Trying [1, 1, 4, 1] Error 38
+               Trying [1, 2, 5, 1] Error 44
+               Trying [1, 2, 3, 1] Error 20
+               Trying [1, 2, 4, 2] Error 17
+                 Current [1, 2, 4, 2] Error 17
+                 Trying [2, 2, 4, 2] Error 52
+                 Trying [1, 3, 4, 2] Error 18
+                 Trying [1, 1, 4, 2] Error 26
+                 Trying [1, 2, 5, 2] Error 30
+                 Trying [1, 2, 3, 2] Error 10
+                 Trying [1, 2, 4, 3] Error 9
+                 Trying [1, 2, 4, 1] Error 29
+                   Current [1, 2, 4, 3] Error 9
+                   Trying [2, 2, 4, 3] Error 34
+                   Trying [1, 3, 4, 3] Error 10
+                   Trying [1, 1, 4, 3] Error 18
+                   Trying [1, 2, 5, 3] Error 20
+                   Trying [1, 2, 3, 3] Error 4
+                   Trying [1, 2, 4, 4] Error 5
+                   Trying [1, 2, 4, 2] Error 17
+                     Current [1, 2, 3, 3] Error 4
+                     Trying [2, 2, 3, 3] Error 31
+                     Trying [1, 3, 3, 3] Error 11
+                     Trying [1, 1, 3, 3] Error 7
+                     Trying [1, 2, 4, 3] Error 9
+                     Trying [1, 2, 2, 3] Error 5
+                     Trying [1, 2, 3, 4] Error 2
+                     Trying [1, 2, 3, 2] Error 10
+                       Current [1, 2, 3, 4] Error 2
+                       Trying [2, 2, 3, 4] Error 19
+                       Trying [1, 3, 3, 4] Error 9
+                       Trying [1, 1, 3, 4] Error 5
+                       Trying [1, 2, 4, 4] Error 5
+                       Trying [1, 2, 2, 4] Error 5
+                       Trying [1, 2, 3, 5] Error 4
+                       Trying [1, 2, 3, 3] Error 4
+Hill Climbing Search: solutions for 4 number of nodes 36, []
+ Current [1, 3, 3, 3] Error 11
+ Trying [2, 3, 3, 3] Error 47
+ Trying [1, 4, 3, 3] Error 28
+ Trying [1, 2, 3, 3] Error 4
+ Trying [1, 3, 4, 3] Error 10
+ Trying [1, 3, 2, 3] Error 18
+ Trying [1, 3, 3, 4] Error 9
+ Trying [1, 3, 3, 2] Error 17
+   Current [1, 2, 3, 3] Error 4
+   Trying [2, 2, 3, 3] Error 31
+   Trying [1, 3, 3, 3] Error 11
+   Trying [1, 1, 3, 3] Error 7
+   Trying [1, 2, 4, 3] Error 9
+   Trying [1, 2, 2, 3] Error 5
+   Trying [1, 2, 3, 4] Error 2
+   Trying [1, 2, 3, 2] Error 10
+     Current [1, 2, 3, 4] Error 2
+     Trying [2, 2, 3, 4] Error 19
+     Trying [1, 3, 3, 4] Error 9
+     Trying [1, 1, 3, 4] Error 5
+     Trying [1, 2, 4, 4] Error 5
+     Trying [1, 2, 2, 4] Error 5
+     Trying [1, 2, 3, 5] Error 4
+     Trying [1, 2, 3, 3] Error 4
+Hill Climbing Search: solutions for 4 number of nodes 39, []
+ Current [6, 9, 1, 6] Error 3423
+ Trying [7, 9, 1, 6] Error 4621
+ Trying [5, 9, 1, 6] Error 2421
+ Trying [6, 8, 1, 6] Error 2759
+ Trying [6, 9, 2, 6] Error 3288
+ Trying [6, 9, 1, 7] Error 3387
+ Trying [6, 9, 1, 5] Error 3463
+   Current [5, 9, 1, 6] Error 2421
+   Trying [6, 9, 1, 6] Error 3423
+   Trying [4, 9, 1, 6] Error 1615
+   Trying [5, 8, 1, 6] Error 1942
+   Trying [5, 9, 2, 6] Error 2302
+   Trying [5, 9, 1, 7] Error 2395
+   Trying [5, 9, 1, 5] Error 2451
+     Current [4, 9, 1, 6] Error 1615
+     Trying [5, 9, 1, 6] Error 2421
+     Trying [3, 9, 1, 6] Error 1005
+     Trying [4, 8, 1, 6] Error 1287
+     Trying [4, 9, 2, 6] Error 1512
+     Trying [4, 9, 1, 7] Error 1599
+     Trying [4, 9, 1, 5] Error 1635
+       Current [3, 9, 1, 6] Error 1005
+       Trying [4, 9, 1, 6] Error 1615
+       Trying [2, 9, 1, 6] Error 591
+       Trying [3, 8, 1, 6] Error 794
+       Trying [3, 9, 2, 6] Error 918
+       Trying [3, 9, 1, 7] Error 999
+       Trying [3, 9, 1, 5] Error 1015
+         Current [2, 9, 1, 6] Error 591
+         Trying [3, 9, 1, 6] Error 1005
+         Trying [1, 9, 1, 6] Error 373
+         Trying [2, 8, 1, 6] Error 463
+         Trying [2, 9, 2, 6] Error 520
+         Trying [2, 9, 1, 7] Error 595
+         Trying [2, 9, 1, 5] Error 591
+           Current [1, 9, 1, 6] Error 373
+           Trying [2, 9, 1, 6] Error 591
+           Trying [1, 8, 1, 6] Error 294
+           Trying [1, 9, 2, 6] Error 318
+           Trying [1, 9, 1, 7] Error 387
+           Trying [1, 9, 1, 5] Error 363
+             Current [1, 8, 1, 6] Error 294
+             Trying [2, 8, 1, 6] Error 463
+             Trying [1, 9, 1, 6] Error 373
+             Trying [1, 7, 1, 6] Error 225
+             Trying [1, 8, 2, 6] Error 245
+             Trying [1, 8, 1, 7] Error 308
+             Trying [1, 8, 1, 5] Error 284
+               Current [1, 7, 1, 6] Error 225
+               Trying [2, 7, 1, 6] Error 351
+               Trying [1, 8, 1, 6] Error 294
+               Trying [1, 6, 1, 6] Error 166
+               Trying [1, 7, 2, 6] Error 182
+               Trying [1, 7, 1, 7] Error 239
+               Trying [1, 7, 1, 5] Error 215
+                 Current [1, 6, 1, 6] Error 166
+                 Trying [2, 6, 1, 6] Error 255
+                 Trying [1, 7, 1, 6] Error 225
+                 Trying [1, 5, 1, 6] Error 117
+                 Trying [1, 6, 2, 6] Error 129
+                 Trying [1, 6, 1, 7] Error 180
+                 Trying [1, 6, 1, 5] Error 156
+                   Current [1, 5, 1, 6] Error 117
+                   Trying [2, 5, 1, 6] Error 175
+                   Trying [1, 6, 1, 6] Error 166
+                   Trying [1, 4, 1, 6] Error 78
+                   Trying [1, 5, 2, 6] Error 86
+                   Trying [1, 5, 1, 7] Error 131
+                   Trying [1, 5, 1, 5] Error 107
+                     Current [1, 4, 1, 6] Error 78
+                     Trying [2, 4, 1, 6] Error 111
+                     Trying [1, 5, 1, 6] Error 117
+                     Trying [1, 3, 1, 6] Error 49
+                     Trying [1, 4, 2, 6] Error 53
+                     Trying [1, 4, 1, 7] Error 92
+                     Trying [1, 4, 1, 5] Error 68
+                       Current [1, 3, 1, 6] Error 49
+                       Trying [2, 3, 1, 6] Error 63
+                       Trying [1, 4, 1, 6] Error 78
+                       Trying [1, 2, 1, 6] Error 30
+                       Trying [1, 3, 2, 6] Error 30
+                       Trying [1, 3, 1, 7] Error 63
+                       Trying [1, 3, 1, 5] Error 39
+                         Current [1, 2, 1, 6] Error 30
+                         Trying [2, 2, 1, 6] Error 31
+                         Trying [1, 3, 1, 6] Error 49
+                         Trying [1, 1, 1, 6] Error 21
+                         Trying [1, 2, 2, 6] Error 17
+                         Trying [1, 2, 1, 7] Error 44
+                         Trying [1, 2, 1, 5] Error 20
+                           Current [1, 2, 2, 6] Error 17
+                           Trying [2, 2, 2, 6] Error 16
+                           Trying [1, 3, 2, 6] Error 30
+                           Trying [1, 1, 2, 6] Error 14
+                           Trying [1, 2, 3, 6] Error 10
+                           Trying [1, 2, 1, 6] Error 30
+                           Trying [1, 2, 2, 7] Error 29
+                           Trying [1, 2, 2, 5] Error 9
+                             Current [1, 2, 2, 5] Error 9
+                             Trying [2, 2, 2, 5] Error 18
+                             Trying [1, 3, 2, 5] Error 22
+                             Trying [1, 1, 2, 5] Error 6
+                             Trying [1, 2, 3, 5] Error 4
+                             Trying [1, 2, 1, 5] Error 20
+                             Trying [1, 2, 2, 6] Error 17
+                             Trying [1, 2, 2, 4] Error 5
+                               Current [1, 2, 3, 5] Error 4
+                               Trying [2, 2, 3, 5] Error 11
+                               Trying [1, 3, 3, 5] Error 11
+                               Trying [1, 1, 3, 5] Error 7
+                               Trying [1, 2, 4, 5] Error 5
+                               Trying [1, 2, 2, 5] Error 9
+                               Trying [1, 2, 3, 6] Error 10
+                               Trying [1, 2, 3, 4] Error 2
+                                 Current [1, 2, 3, 4] Error 2
+                                 Trying [2, 2, 3, 4] Error 19
+                                 Trying [1, 3, 3, 4] Error 9
+                                 Trying [1, 1, 3, 4] Error 5
+                                 Trying [1, 2, 4, 4] Error 5
+                                 Trying [1, 2, 2, 4] Error 5
+                                 Trying [1, 2, 3, 5] Error 4
+                                 Trying [1, 2, 3, 3] Error 4
+Hill Climbing Search: solutions for 4 number of nodes 61, []
+ Current [4, 3, 8, 9] Error 78
+ Trying [5, 3, 8, 9] Error 190
+ Trying [3, 3, 8, 9] Error 18
+ Trying [4, 4, 8, 9] Error 122
+ Trying [4, 2, 8, 9] Error 74
+ Trying [4, 3, 9, 9] Error 83
+ Trying [4, 3, 7, 9] Error 79
+ Trying [4, 3, 8, 8] Error 100
+   Current [3, 3, 8, 9] Error 18
+   Trying [4, 3, 8, 9] Error 78
+   Trying [2, 3, 8, 9] Error 10
+   Trying [3, 4, 8, 9] Error 29
+   Trying [3, 2, 8, 9] Error 33
+   Trying [3, 3, 9, 9] Error 27
+   Trying [3, 3, 7, 9] Error 15
+   Trying [3, 3, 8, 8] Error 30
+     Current [2, 3, 8, 9] Error 10
+     Trying [3, 3, 8, 9] Error 18
+     Trying [1, 3, 8, 9] Error 54
+     Trying [2, 4, 8, 9] Error 2
+     Trying [2, 2, 8, 9] Error 34
+     Trying [2, 3, 9, 9] Error 23
+     Trying [2, 3, 7, 9] Error 3
+     Trying [2, 3, 8, 8] Error 12
+       Current [2, 4, 8, 9] Error 2
+       Trying [3, 4, 8, 9] Error 29
+       Trying [1, 4, 8, 9] Error 41
+       Trying [2, 5, 8, 9] Error 10
+       Trying [2, 3, 8, 9] Error 10
+       Trying [2, 4, 9, 9] Error 7
+       Trying [2, 4, 7, 9] Error 3
+       Trying [2, 4, 8, 8] Error 4
+Hill Climbing Search: solutions for 4 number of nodes 65, []
+ Current [8, 1, 3, 5] Error 791
+ Trying [9, 1, 3, 5] Error 1047
+ Trying [7, 1, 3, 5] Error 571
+ Trying [8, 2, 3, 5] Error 935
+ Trying [8, 1, 4, 5] Error 798
+ Trying [8, 1, 2, 5] Error 790
+ Trying [8, 1, 3, 6] Error 727
+ Trying [8, 1, 3, 4] Error 859
+   Current [7, 1, 3, 5] Error 571
+   Trying [8, 1, 3, 5] Error 791
+   Trying [6, 1, 3, 5] Error 387
+   Trying [7, 2, 3, 5] Error 676
+   Trying [7, 1, 4, 5] Error 578
+   Trying [7, 1, 2, 5] Error 570
+   Trying [7, 1, 3, 6] Error 517
+   Trying [7, 1, 3, 4] Error 629
+     Current [6, 1, 3, 5] Error 387
+     Trying [7, 1, 3, 5] Error 571
+     Trying [5, 1, 3, 5] Error 239
+     Trying [6, 2, 3, 5] Error 459
+     Trying [6, 1, 4, 5] Error 394
+     Trying [6, 1, 2, 5] Error 386
+     Trying [6, 1, 3, 6] Error 343
+     Trying [6, 1, 3, 4] Error 435
+       Current [5, 1, 3, 5] Error 239
+       Trying [6, 1, 3, 5] Error 387
+       Trying [4, 1, 3, 5] Error 127
+       Trying [5, 2, 3, 5] Error 284
+       Trying [5, 1, 4, 5] Error 246
+       Trying [5, 1, 2, 5] Error 238
+       Trying [5, 1, 3, 6] Error 205
+       Trying [5, 1, 3, 4] Error 277
+         Current [4, 1, 3, 5] Error 127
+         Trying [5, 1, 3, 5] Error 239
+         Trying [3, 1, 3, 5] Error 51
+         Trying [4, 2, 3, 5] Error 151
+         Trying [4, 1, 4, 5] Error 134
+         Trying [4, 1, 2, 5] Error 126
+         Trying [4, 1, 3, 6] Error 103
+         Trying [4, 1, 3, 4] Error 155
+           Current [3, 1, 3, 5] Error 51
+           Trying [4, 1, 3, 5] Error 127
+           Trying [2, 1, 3, 5] Error 11
+           Trying [3, 2, 3, 5] Error 60
+           Trying [3, 1, 4, 5] Error 58
+           Trying [3, 1, 2, 5] Error 50
+           Trying [3, 1, 3, 6] Error 37
+           Trying [3, 1, 3, 4] Error 69
+             Current [2, 1, 3, 5] Error 11
+             Trying [3, 1, 3, 5] Error 51
+             Trying [1, 1, 3, 5] Error 7
+             Trying [2, 2, 3, 5] Error 11
+             Trying [2, 1, 4, 5] Error 18
+             Trying [2, 1, 2, 5] Error 10
+             Trying [2, 1, 3, 6] Error 7
+             Trying [2, 1, 3, 4] Error 19
+               Current [1, 1, 3, 5] Error 7
+               Trying [2, 1, 3, 5] Error 11
+               Trying [1, 2, 3, 5] Error 4
+               Trying [1, 1, 4, 5] Error 14
+               Trying [1, 1, 2, 5] Error 6
+               Trying [1, 1, 3, 6] Error 13
+               Trying [1, 1, 3, 4] Error 5
+                 Current [1, 2, 3, 5] Error 4
+                 Trying [2, 2, 3, 5] Error 11
+                 Trying [1, 3, 3, 5] Error 11
+                 Trying [1, 1, 3, 5] Error 7
+                 Trying [1, 2, 4, 5] Error 5
+                 Trying [1, 2, 2, 5] Error 9
+                 Trying [1, 2, 3, 6] Error 10
+                 Trying [1, 2, 3, 4] Error 2
+                   Current [1, 2, 3, 4] Error 2
+                   Trying [2, 2, 3, 4] Error 19
+                   Trying [1, 3, 3, 4] Error 9
+                   Trying [1, 1, 3, 4] Error 5
+                   Trying [1, 2, 4, 4] Error 5
+                   Trying [1, 2, 2, 4] Error 5
+                   Trying [1, 2, 3, 5] Error 4
+                   Trying [1, 2, 3, 3] Error 4
+Hill Climbing Search: solutions for 4 number of nodes 75, []
+ Current [3, 3, 7, 8] Error 25
+ Trying [4, 3, 7, 8] Error 99
+ Trying [2, 3, 7, 8] Error 3
+ Trying [3, 4, 7, 8] Error 46
+ Trying [3, 2, 7, 8] Error 30
+ Trying [3, 3, 8, 8] Error 30
+ Trying [3, 3, 6, 8] Error 26
+ Trying [3, 3, 7, 9] Error 15
+ Trying [3, 3, 7, 7] Error 39
+   Current [2, 3, 7, 8] Error 3
+   Trying [3, 3, 7, 8] Error 25
+   Trying [1, 3, 7, 8] Error 33
+   Trying [2, 4, 7, 8] Error 3
+   Trying [2, 2, 7, 8] Error 19
+   Trying [2, 3, 8, 8] Error 12
+   Trying [2, 3, 6, 8] Error 0
+   Trying [2, 3, 7, 9] Error 3
+   Trying [2, 3, 7, 7] Error 7
+     Current [2, 3, 6, 8] Error 0
+Hill Climbing Search: solutions for 4 number of nodes 78, [[2, 3, 6, 8]]
+</pre>
+</div>
+</div>
+
+</div><!-- end of style="font-size:0.5em" -->
+</div><!-- end of jb-print jb-render -->
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-74e9f98c-2a66-4688-9cf9-4105001f16f9" ><span id="id-74e9f98c-2a66-4688-9cf9-4105001f16f9"><img id="img-id-74e9f98c-2a66-4688-9cf9-4105001f16f9"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-352bf48d-c167-4127-9115-11e4ff09b54e" ><span id="id-352bf48d-c167-4127-9115-11e4ff09b54e"><img id="img-id-352bf48d-c167-4127-9115-11e4ff09b54e" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00015_frag_00001" data-state="slide_00015_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Local Search</h1>
+
+
+<span id="id-bbb0fb04-ecca-48fe-926b-7468526b2666" ><span id="id-bbb0fb04-ecca-48fe-926b-7468526b2666"><img id="img-id-bbb0fb04-ecca-48fe-926b-7468526b2666"     src="assets/images/hc30.svg"/></span>
+</span>
+
+<div class="jb-text" style="font-size:1.0em">
+<ul>
+<li>The error function above breaks the space of possible solutions up into 
+five areas</li>
+<li>Success of hill climbing and other local methods depends on two factors</li>
+<ul>
+<ul>
+<li>Reasonable chance of finding an initial point which will lead to the global maximum</li>
+<li>Reasonable slope that we can follow to the global maximum</li>
+</ul>
+</ul>
+</div>
+
+<span id="id-d01828af-4978-4a03-8ab0-e2ab755859b1" style="width:10%"><span id="id-d01828af-4978-4a03-8ab0-e2ab755859b1"><img id="img-id-d01828af-4978-4a03-8ab0-e2ab755859b1"     src="assets/images/hc31.svg"/></span>
+</span>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-6cdd6be2-a64d-4f58-9dad-71f0e3ee4320" ><span id="id-6cdd6be2-a64d-4f58-9dad-71f0e3ee4320"><img id="img-id-6cdd6be2-a64d-4f58-9dad-71f0e3ee4320"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-c022023d-44e0-44a4-b660-ebe55be3c5f0" ><span id="id-c022023d-44e0-44a4-b660-ebe55be3c5f0"><img id="img-id-c022023d-44e0-44a4-b660-ebe55be3c5f0" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00016_frag_00001" data-state="slide_00016_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Local Search and Gradient Descent</h1>
+
+<div class="jb-text">
+<ul>
+<li>Gradient descent is another local search method similar to hill climbing</li>
+<li>Used for numerical approximation problems like regression</li>
+<li>Gradient descent is at the heart of many machine learning (artificial neural networks (ANN) and deep learning (DL))
+and optimization algorithms</li>
+<li>We must use local methods because searching the entire space is too time
+consuming. Astronomically large search spaces</li>
+
+</ul>
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-2f07f475-20f3-4a98-aa55-4c75536481f1" ><span id="id-2f07f475-20f3-4a98-aa55-4c75536481f1"><img id="img-id-2f07f475-20f3-4a98-aa55-4c75536481f1"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-dda78541-1547-4785-b95e-709d27de63d1" ><span id="id-dda78541-1547-4785-b95e-709d27de63d1"><img id="img-id-dda78541-1547-4785-b95e-709d27de63d1" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+        </div>
+        </div>
+
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // More info about config & dependencies:
+            // - https://github.com/hakimel/reveal.js#configuration
+            // - https://github.com/hakimel/reveal.js#dependencies
+            Reveal.initialize({
+                math: {
+                    mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+                    config: 'TeX-AMS_HTML-full',  // See http://docs.mathjax.org/en/latest/config-files.html
+                    // tex2jax: {
+                    //     inlineMath: [['$', '$'], ['\(', '\)']],
+                    //     displayMath: [['$$', '$$'], ['\[', '\]']],
+                    //     processEscapes: true,
+                    //     processEnvironments: true,
+                    //     skipTags: ['script', 'noscript', 'style', 'textarea', 'code', 'pre'],
+                    //     displayAlign: 'center',
+                    // }                
+                },
+                dependencies: [
+                    { src: 'plugin/markdown/marked.js' },
+                    { src: 'plugin/markdown/markdown.js' },
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/math/math.js', async: true }
+                ]
+            });
+        </script>
+
+        <script>
+            <!-- Assets -->
+var assets = {
+"robbi" : new JBImage( "robbi", "12677", "162", "138", null, null, "assets/images/robbi", "png" ),
+"logo" : new JBImage( "logo", "12033", "0", "0", null, null, "assets/images/logo", "png" ),
+"fira-logo-1" : new JBImage( "fira-logo-1", "93836", "0", "0", null, null, "assets/images/FIRA-logo-1", "png" ),
+"pairLogo" : new JBImage( "pairLogo", "63051", "0", "0", null, null, "assets/images/pairLogo", "png" ),
+"dfs2" : new JBImage( "dfs2", "79214", "0", "0", null, null, "assets/images/dfs2", "svg" ),
+"hc1" : new JBImage( "hc1", "34617", "0", "0", null, null, "assets/images/hc1", "svg" ),
+"hc20" : new JBImage( "hc20", "7468", "0", "0", null, null, "assets/images/hc20", "svg" ),
+"hc30" : new JBImage( "hc30", "35328", "0", "0", null, null, "assets/images/hc30", "svg" ),
+"hc31" : new JBImage( "hc31", "40596", "0", "0", null, null, "assets/images/hc31", "svg" ) 
+};
+var assetInstances = {
+    "id-546819be-fdb3-4024-ab7a-bff6daebef5a": assets["robbi"],
+    "id-578528b9-ebff-46a8-8d9a-5c4cbef5f11c": assets["robbi"],
+    "id-bc3e713a-d487-46ed-9ef8-1fb02c0c5942": assets["robbi"],
+    "id-f1876f92-c247-4088-a89b-87406b355a4f": assets["robbi"],
+    "id-ad719601-fa20-4793-8e07-583fa7d42194": assets["robbi"],
+    "id-0069e6de-d701-4bfc-93cb-37f735dec20d": assets["robbi"],
+    "id-da4dbaf0-b7d5-4abc-a470-4565f1a70551": assets["robbi"],
+    "id-ed59dc26-3927-4aa9-8914-37b4d69d0bc2": assets["robbi"],
+    "id-390b0f8a-cfa2-41e2-9e65-15b02cd8c6f0": assets["robbi"],
+    "id-a2b711c8-cff8-4907-a41b-73c06c3fcd75": assets["robbi"],
+    "id-f09a8422-bdf6-49a6-b462-6f5e645706eb": assets["robbi"],
+    "id-a19ad4ce-f9c8-48fb-beab-b7bcb55d8122": assets["robbi"],
+    "id-352bf48d-c167-4127-9115-11e4ff09b54e": assets["robbi"],
+    "id-c022023d-44e0-44a4-b660-ebe55be3c5f0": assets["robbi"],
+    "id-dda78541-1547-4785-b95e-709d27de63d1": assets["robbi"],
+    "id-517a9112-273b-4e81-ae6b-9cf800a67708": assets["logo"],
+    "id-5e28c096-4cd8-4bc5-ac46-3b14ea897b3c": assets["logo"],
+    "id-049d6a40-c9a7-4574-8774-014bdb84775f": assets["logo"],
+    "id-5265db56-0d8d-456f-8f09-b6fcdc849455": assets["logo"],
+    "id-27d15eef-1b47-4330-9466-fbb05379cae6": assets["logo"],
+    "id-9c336434-2f20-4601-a568-ac8c94716162": assets["logo"],
+    "id-2bcba390-e6f4-4f61-940b-5d6ae8b3c5cd": assets["logo"],
+    "id-7b2bf3c6-ab66-4e13-ad40-1ab6c5b2e6e0": assets["logo"],
+    "id-032026a1-d1b3-4a75-b672-97d1cb3bf17b": assets["logo"],
+    "id-8201066a-1028-418f-9ee7-176373cf664d": assets["logo"],
+    "id-cf0585d1-5472-4e65-a089-f49c6748f41f": assets["logo"],
+    "id-f4921ff0-3aef-474a-8991-474cd092e105": assets["logo"],
+    "id-74e9f98c-2a66-4688-9cf9-4105001f16f9": assets["logo"],
+    "id-6cdd6be2-a64d-4f58-9dad-71f0e3ee4320": assets["logo"],
+    "id-2f07f475-20f3-4a98-aa55-4c75536481f1": assets["logo"],
+    "id-e96172a1-088f-4f36-809d-a8a78e71995c": assets["hc1"],
+    "id-ae0f2069-5f94-42b0-bcac-e1182507033c": assets["hc20"],
+    "id-bbb0fb04-ecca-48fe-926b-7468526b2666": assets["hc30"],
+    "id-d01828af-4978-4a03-8ab0-e2ab755859b1": assets["hc31"]
+};
+<!-- End of Assets -->
+
+            convertURLs(assetInstances, "smart-path");
+        </script>
+        <script>
+            <!-- Characters -->
+var characters =
+{};
+<!-- End of Characters -->
+
+        </script>
+    </body>
+</html>
